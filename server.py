@@ -144,6 +144,8 @@ async def browser_click(ref: str) -> dict[str, Any]:
     control = controls[index]
     text = f"{control.get('text', '')} {control.get('type', '')}".lower()
     blocked = {"submit", "send", "pay", "purchase", "checkout", "delete", "remove", "confirm", "book", "order"}
+    if control.get("type", "").lower() in {"submit", "image"}:
+        raise PermissionError("Final action blocked; ask the user to review and submit manually")
     if control.get("tag") == "button" and any(word in text for word in blocked):
         raise PermissionError("Final action blocked; ask the user to review and submit manually")
     if control.get("tag") == "a" and control.get("text", "").lower() in {"submit", "send", "pay", "checkout"}:
