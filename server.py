@@ -45,7 +45,10 @@ class BrowserState:
         if self.page is None or self.page.is_closed():
             if self.context is None:
                 self.playwright = await async_playwright().start()
-                self.browser = await self.playwright.chromium.launch(headless=BROWSER_HEADLESS)
+                self.browser = await self.playwright.chromium.launch(
+                    headless=BROWSER_HEADLESS,
+                    executable_path=os.getenv("BROWSER_EXECUTABLE_PATH") or None,
+                )
                 self.context = await self.browser.new_context()
             self.page = await self.context.new_page()
         return self.page
